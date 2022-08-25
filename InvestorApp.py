@@ -9,13 +9,6 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 import base64
-import psycopg2
-import sqlalchemy
-from sqlalchemy import create_engine
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
-from sqlalchemy import inspect
-from sqlalchemy.sql import text
-from sqlalchemy import insert
 
 ############Streamlit Code #########################
 
@@ -39,18 +32,6 @@ def load_contract():
     return contract
 
 contract = load_contract()
-
-
-##Write Cap table to CSV 
-def captableToCSV(_asset, _fullname, _walletAddress, _contribution):
-    data = {'Asset': _asset, 'fullName': _fullname, 'walletAddress' : _walletAddress, 'contribution': _contribution}
-    df = pd.DataFrame(data,  index=[0])
-    df.to_csv('captable.csv', encoding='utf-8', index=False)
-      
-## select cap table info 
-def view_cap_table_data():
-    df = pd.read_csv('captable.csv')
-    st.table(df)
 
 def main_page():
     ##Function to set up background image 
@@ -163,11 +144,61 @@ def page2():
 
     collectinfo()
   
+## View cap table info 
+def view_cap_table_data():
+    df = pd.read_csv('captable.csv')
+    st.table(df)
+
+##### Side bar nav for issuer internal app 
+def page3():
+
+    def viewDividendsValue(asset, share_price):
+        df = pd.read_csv('captable.csv')
+        df["dividends"] = np.nan
+        if share_price != 0.00: 
+            if option == 'bgro':
+                df2= df[df['Asset'] == 'bgro']
+                for index, row in df2.iterrows():
+                    div = row["amount"]/share_price
+                    st.write(row["fullname"], row["amount"], div)
+                    df.at[index,'dividends'] = div
+            elif option == 'pgro':
+                df3= df[df['Asset'] == 'pgro']
+                for index, row in df3.iterrows():
+                    div = row["amount"]/share_price
+                    st.write(row["fullname"], row["amount"], div)
+                    df[row["dividends"]] = div
+            else :
+                df4= df[df['Asset'] == 'sjsm']
+                for index, row in df4.iterrows():
+                    div = row["amount"]/share_price
+                    st.write(row["fullname"], row["amount"], div)
+                    df[row["dividends"]] = div
+            st.table(df)
+        df.to_csv('dividends.csv')    
+
+
+ 
+    st.markdown(f'<h1 style="color:#F78066;font-size:40px;">{"Issuer Internal App"}</h1>', unsafe_allow_html=True)
+    option = st.selectbox('Select the asset for which you would like to view the captable', ('bgro', 'pgro', 'sjsm'))
+    df = pd.read_csv('captable.csv')
+    if option == 'bgro':
+        st.write(df[df['Asset'] == 'bgro'])
+    elif option == 'pgro':
+        st.write(df[df['Asset'] == 'pgro'])
+    else :
+        st.write(df[df['Asset'] == 'sjsm'])
+    button = st.button('Register NFT')
+    share_price_in_ether = st.number_input("set share price in ether")
+    viewDividendsValue(option, share_price_in_ether )
+
+
 
 
 page_names_to_funcs = {
     "Movie Project Information": main_page,
-    "Contribution": page2
+    "Contribution": page2,
+    "Issuer Internal App": page3
 }
 
 selected_page = st.sidebar.selectbox("Select a page", page_names_to_funcs.keys())
