@@ -9,6 +9,21 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 import base64
+import numpy as np
+from PIL import Image
+import base64
+from web3 import Web3
+from dotenv import load_dotenv
+import os
+import json
+import token
+import sys
+import os
+from os import path
+import requests
+import csv
+import time
+from common.PinataKeyClass import PinataKey
 
 ############Streamlit Code #########################
 
@@ -155,6 +170,7 @@ def page3():
     def viewDividendsValue(asset, share_price):
         df = pd.read_csv('captable.csv')
         df["dividends"] = np.nan
+        df["Total_shares_for_Asset"] = 100000000
         if share_price != 0.00: 
             if option == 'bgro':
                 df2= df[df['Asset'] == 'bgro']
@@ -167,17 +183,15 @@ def page3():
                 for index, row in df3.iterrows():
                     div = row["amount"]/share_price
                     st.write(row["fullname"], row["amount"], div)
-                    df[row["dividends"]] = div
+                    df.at[index,'dividends'] = div
             else :
                 df4= df[df['Asset'] == 'sjsm']
                 for index, row in df4.iterrows():
                     div = row["amount"]/share_price
                     st.write(row["fullname"], row["amount"], div)
-                    df[row["dividends"]] = div
+                    df.at[index,'dividends'] = div
             st.table(df)
         df.to_csv('dividends.csv')    
-
-
  
     st.markdown(f'<h1 style="color:#F78066;font-size:40px;">{"Issuer Internal App"}</h1>', unsafe_allow_html=True)
     option = st.selectbox('Select the asset for which you would like to view the captable', ('bgro', 'pgro', 'sjsm'))
@@ -188,17 +202,82 @@ def page3():
         st.write(df[df['Asset'] == 'pgro'])
     else :
         st.write(df[df['Asset'] == 'sjsm'])
-    button = st.button('Register NFT')
+        
     share_price_in_ether = st.number_input("set share price in ether")
     viewDividendsValue(option, share_price_in_ether )
 
+## Upload to IPFS
+def uploadToIPFS():
 
+    filePath = 'film_projects/bgro'
+    txtFileList=[]
+    item={}
+
+    print(f"Current working directory: {os.getcwd()}")
+
+    headers={}
+    endpoint =''
+    # construct the Pinata key object
+    keylist=PinataKey('pinataApiKey.csv')
+    endpoint = keylist.fetchEndpoint('pinFileToIPFS') # choose the pinata endpoint and the corresponding header format
+
+    mode='likerland' # the mode label is defined in the file pinata_api_key.csv.  
+    headers=keylist.fetchKey(mode)
+
+    fileCounter=0
+    for file in os.listdir(filePath):
+    # Check whether file is in text format or not.  If yes, put into the txtFileList
+    
+        if file.endswith(".txt"):
+            fileCounter+=1
+            txtFileList.append(file)
+
+    txtFileList = sorted(txtFileList)
+
+    print(f'Number of text file to be uploaded:{fileCounter}')
+
+    # Upload to Pinata, output to csv for record if successfully
+
+    fieldnames=['filename','ipfsHash']
+    fileWriter= open('uploadedTxt.csv','w', encoding="utf-8")
+
+    dictWriter = csv.DictWriter(fileWriter,fieldnames)
+    dictWriter.writeheader()
+
+    for file in txtFileList:
+        item['filename']=file
+        fullPath=f"{filePath}/{file}"
+    
+        files = {"file":open(fullPath, 'rb')}
+       
+        resp = requests.post(endpoint, headers=headers, files=files)
+        retry=0
+        while(resp.status_code != 200 and retry < 3):
+          retry +=1
+          print("attempt {}...".format(retry+1),end='',flush=True)
+          time.sleep(15)
+          resp = requests.post(endpoint, headers=headers, files=fullPath)    
+
+        if(resp.status_code == 200):
+            print(f"{fullPath} upload successful")
+            item['ipfsHash'] = resp.json()["IpfsHash"]
+        else:
+            print('Upload Failed :'+ resp.status_code +''+ resp.json)
+
+        dictWriter.writerow(item)
+
+
+    fileWriter.close()
+
+def page4():
+        uploadToIPFS()
 
 
 page_names_to_funcs = {
     "Movie Project Information": main_page,
     "Contribution": page2,
-    "Issuer Internal App": page3
+    "View captable & Issue NFT": page3,
+    "Register & Distributre dividends": page4
 }
 
 selected_page = st.sidebar.selectbox("Select a page", page_names_to_funcs.keys())
