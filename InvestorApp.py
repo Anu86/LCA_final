@@ -210,7 +210,7 @@ def page3():
 def uploadToIPFS():
 
     filePath = 'film_projects/bgro'
-    txtFileList=[]
+    textFileList=[]
     item={}
 
     print(f"Current working directory: {os.getcwd()}")
@@ -228,11 +228,11 @@ def uploadToIPFS():
     for file in os.listdir(filePath):
     # Check whether file is in text format or not.  If yes, put into the txtFileList
     
-        if file.endswith(".txt"):
+        if file.endswith(".png"):
             fileCounter+=1
-            txtFileList.append(file)
+            textFileList.append(file)
 
-    txtFileList = sorted(txtFileList)
+    textFileList = sorted(textFileList)
 
     print(f'Number of text file to be uploaded:{fileCounter}')
 
@@ -244,7 +244,7 @@ def uploadToIPFS():
     dictWriter = csv.DictWriter(fileWriter,fieldnames)
     dictWriter.writeheader()
 
-    for file in txtFileList:
+    for file in textFileList:
         item['filename']=file
         fullPath=f"{filePath}/{file}"
     
