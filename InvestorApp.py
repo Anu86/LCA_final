@@ -171,6 +171,7 @@ def page3():
         df = pd.read_csv('captable.csv')
         df["dividends"] = np.nan
         df["Total_shares_for_Asset"] = 100000000
+        df["share_price"] = share_price
         if share_price != 0.00: 
             if option == 'bgro':
                 df2= df[df['Asset'] == 'bgro']
@@ -209,7 +210,7 @@ def page3():
 ## Upload to IPFS
 def uploadToIPFS():
 
-    filePath = 'film_projects/bgro'
+    filePath = 'film_projects/IPFS-Files'
     textFileList=[]
     item={}
 
@@ -221,14 +222,15 @@ def uploadToIPFS():
     keylist=PinataKey('pinataApiKey.csv')
     endpoint = keylist.fetchEndpoint('pinFileToIPFS') # choose the pinata endpoint and the corresponding header format
 
+
     mode='likerland' # the mode label is defined in the file pinata_api_key.csv.  
-    headers=keylist.fetchKey(mode)
+    headers=keylist.fetchKey('Free')
 
     fileCounter=0
     for file in os.listdir(filePath):
     # Check whether file is in text format or not.  If yes, put into the txtFileList
     
-        if file.endswith(".png"):
+        if file.endswith(".txt"):
             fileCounter+=1
             textFileList.append(file)
 
@@ -247,11 +249,12 @@ def uploadToIPFS():
     for file in textFileList:
         item['filename']=file
         fullPath=f"{filePath}/{file}"
-    
+
         files = {"file":open(fullPath, 'rb')}
-       
+        print(fullPath)
         resp = requests.post(endpoint, headers=headers, files=files)
         retry=0
+        print("Response code %s, headers %s ." % (resp.status_code, headers.keys, ))
         while(resp.status_code != 200 and retry < 3):
           retry +=1
           print("attempt {}...".format(retry+1),end='',flush=True)
@@ -262,15 +265,68 @@ def uploadToIPFS():
             print(f"{fullPath} upload successful")
             item['ipfsHash'] = resp.json()["IpfsHash"]
         else:
-            print('Upload Failed :'+ resp.status_code +''+ resp.json)
+            print('Upload Failed :')
 
         dictWriter.writerow(item)
 
 
     fileWriter.close()
 
+def registerNFT():
+
+    st.write("Looking at the captable to issue NFT based on share price")
+    df_div= pd.read_csv('dividends.csv')
+    st.table(df_div)
+    commission = st.number_input("Commission %")
+    button = st.button('Issue NFTs')
+    option = st.selectbox('Select the asset for which you would like to issue NFTs', ('bgro', 'pgro', 'sjsm'))
+    availableNow = 100000000
+    ipfs_df = pd.read_csv("uploadedTxt.csv")
+    artwork_uri = ipfs_df["filename"]
+    file_hash = ipfs_df["ipfsHash"]
+
+    if st.button("Register with IPFS"):
+    # Use the `pin_artwork` helper function to pin the file to IPFS
+    
+        for index, row in df_div.iterrows():
+            if (row["Asset"] == option):
+                    owner = df_div.at[index,'wallet_address']
+                    film = df_div.at[index,'Asset']
+                    filmItem = "filmItem"
+                    initial_price = df_div.at[index,'share_price']
+                    issueQty = df_div.at[index,'Total_shares_for_Asset']
+                    
+            else :
+                st.write("Invalid Selection")
+
+        tx_hash = contract.functions.registerToken(
+            owner,
+            film,
+            filmItem,
+            int(initial_price),
+            int(issueQty),
+            availableNow,
+            int(commission*100),  # commission multiplied by hundred bec of Solidity 
+            artwork_uri,
+            file_hash,
+            bytes(0x0000)
+            ).transact({'from': owner, 'gas': 1000000})
+        receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+    #st.write("Transaction receipt mined:")
+    # st.write(dict(receipt))
+    # st.write("You can view the pinned metadata file with the following IPFS Gateway Link")
+    #st.markdown(f"[Artwork IPFS Gateway Link](https://ipfs.io/ipfs/{artwork_ipfs_hash})")
+        st.markdown(f"[Click to see the NFT just added](https://gateway.pinata.cloud/ipfs/{file_hash})")
+        st.write(file_hash)
+        st.markdown("---")
+
+
+
+
 def page4():
         uploadToIPFS()
+        registerNFT()
+
 
 
 page_names_to_funcs = {
