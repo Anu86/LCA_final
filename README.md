@@ -39,7 +39,7 @@ ANNA/ANUSHA
     * can be done through Streamlit Interface or
     * set using Remix
 * Profit/Dividend analysis and Distribution
-ANNA/ANUSHA
+
     - setting campaign targets
     - NFT Registration
     - Dividends
@@ -115,53 +115,17 @@ open the Terminal window and clone as follows:
    2. %git clone URL_link_that_was_copied_in_step_1_above   
     
    3. %ls       
-        lights_camera_action  
+        LCA_Final 
         
    4. %cd lights_camera_action/r&d/code_for_NFTs
 
 The entire application files in the current directory are as follows:
-ERC2981.sol                     
-P3-BOLYTokenDiv_ERC20.sol       
-film_projects
-Images                          
-P3-BOLYTokenDividend.sol        
-image_2.png
-LCAUtility.py                   
-P3-BOLY_NFTRoyalties.sol        
-main
-    contracts
-        abi_token.json
-        tokens_abi.json
-    compiled
-        ft_n_nft copy.sol
-        ft_n_nft.sol
-    film_projects
-        bgro
-            bgro_1.png
-            bgro_2.png
-            bgro_3.png
-            bgro.png
-            synopsis.pdf
-        pgro
-            pgro.png
-            synopsis.pdf
-        sjsm
-            sjsm_1.png
-            sjsm_2.png
-            sjsm_3.png
-            sjsm_4.png
-            sjsm.png
-            synopsis.pdf
-    films_4.png
-    LCAUtility.py
-    Movie-Projects.csv
-    pinata.py
-    Pipfile
-    Pipfile.lock
-    README.md
-    run.sh
-    SAMPLE.env
-    tokens.py
+                    
+                
+![P3ReadMeTitlePic](./Images/FolderDetails1.png)
+
+![P3ReadMeTitlePic](./Images/FolderDetails2.png)
+
 LICENSE                         
 P3-LCA_CryVesto3.0-Proposal.md  project_notes.txt
 Movie-Projects.csv              
