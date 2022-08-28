@@ -295,6 +295,11 @@ def registerNFT():
                     filmItem = "filmItem"
                     initial_price = df_div.at[index,'share_price']
                     issueQty = df_div.at[index,'Total_shares_for_Asset']
+                    wallet_address = df_div.at[index,'wallet_address']
+                    #MINT TOKENS
+                    contract.functions.mint(wallet_address,1, issueQty, "").transact({'from': owner, 'gas': 1000000})
+                    #Pay tokens
+                    contract.functions.payForTokens( initial_price *1000000000000000000, owner).transact({'from': wallet_address, 'value': initial_price* 1000000000000000000, 'gas': 1000000})
                     
             else :
                 st.write("Invalid Selection")
@@ -308,8 +313,8 @@ def registerNFT():
             availableNow,
             int(commission*100),  # commission multiplied by hundred bec of Solidity 
             artwork_uri,
-            file_hash,
-            bytes(0x0000)
+            file_hash, 
+            0xff
             ).transact({'from': owner, 'gas': 1000000})
         receipt = w3.eth.waitForTransactionReceipt(tx_hash)
     #st.write("Transaction receipt mined:")
@@ -319,6 +324,7 @@ def registerNFT():
         st.markdown(f"[Click to see the NFT just added](https://gateway.pinata.cloud/ipfs/{file_hash})")
         st.write(file_hash)
         st.markdown("---")
+        
 
 
 
