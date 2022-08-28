@@ -28,7 +28,7 @@ Functionality to provide user with registration for fungible tokens and non-fung
 
 
 --- 
-
+* [PptPresentation](https://docs.google.com/presentation/d/1702vW2SxHXhDt5JQZEatg0zKgqI-4WXm/edit?usp=sharing&ouid=116787546129771746745&rtpof=true&sd=true) 
 
 ---
 --- 
