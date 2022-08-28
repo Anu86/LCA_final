@@ -10,15 +10,8 @@ import numpy as np
 from PIL import Image
 import base64
 import numpy as np
-from PIL import Image
-import base64
-from web3 import Web3
-from dotenv import load_dotenv
-import os
-import json
 import token
 import sys
-import os
 from os import path
 import requests
 import csv
@@ -284,6 +277,7 @@ def registerNFT():
     ipfs_df = pd.read_csv("uploadedTxt.csv")
     artwork_uri = ipfs_df["filename"]
     file_hash = ipfs_df["ipfsHash"]
+    msg = bytearray() 
 
     if st.button("Register with IPFS"):
     # Use the `pin_artwork` helper function to pin the file to IPFS
@@ -297,37 +291,15 @@ def registerNFT():
                     issueQty = df_div.at[index,'Total_shares_for_Asset']
                     wallet_address = df_div.at[index,'wallet_address']
                     #MINT TOKENS
-                    contract.functions.mint(wallet_address,1, issueQty, "").transact({'from': owner, 'gas': 1000000})
+                    st.write(wallet_address)
+                    contract.functions.mint(wallet_address,1, int(issueQty), "").transact({'from': owner, 'gas': 1000000})
+                    contract.functions.updateTokenCount(1, int(issueQty))
                     #Pay tokens
                     contract.functions.payForTokens( initial_price *1000000000000000000, owner).transact({'from': wallet_address, 'value': initial_price* 1000000000000000000, 'gas': 1000000})
                     
             else :
                 st.write("Invalid Selection")
-
-        tx_hash = contract.functions.registerToken(
-            owner,
-            film,
-            filmItem,
-            int(initial_price),
-            int(issueQty),
-            availableNow,
-            int(commission*100),  # commission multiplied by hundred bec of Solidity 
-            artwork_uri,
-            file_hash, 
-            0xff
-            ).transact({'from': owner, 'gas': 1000000})
-        receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-    #st.write("Transaction receipt mined:")
-    # st.write(dict(receipt))
-    # st.write("You can view the pinned metadata file with the following IPFS Gateway Link")
-    #st.markdown(f"[Artwork IPFS Gateway Link](https://ipfs.io/ipfs/{artwork_ipfs_hash})")
-        st.markdown(f"[Click to see the NFT just added](https://gateway.pinata.cloud/ipfs/{file_hash})")
-        st.write(file_hash)
-        st.markdown("---")
         
-
-
-
 
 def page4():
         uploadToIPFS()
@@ -339,7 +311,7 @@ page_names_to_funcs = {
     "Movie Project Information": main_page,
     "Contribution": page2,
     "View captable & Issue NFT": page3,
-    "Register & Distributre dividends": page4
+    "Register & Distribute dividends": page4
 }
 
 selected_page = st.sidebar.selectbox("Select a page", page_names_to_funcs.keys())
