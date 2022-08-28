@@ -26,7 +26,7 @@ The Cryvesto project meets the following criteria:
 Functionality to provide user with registration for fungible tokens ("BollyCoin"Tokens) and non-fungible tokens (NFTs) to select choice of investible projects. Also, the need to provide royalties for (NFT) selections, while supporting investor NFT transactions for trade and provide FT balances in their accounts on a HD wallet.  
 
 # 
-* [PptPresentation](https://docs.google.com/presentation/d/1702vW2SxHXhDt5JQZEatg0zKgqI-4WXm/edit?usp=sharing&ouid=116787546129771746745&rtpof=true&sd=true) 
+This [PowerPoint_Presentation](https://docs.google.com/presentation/d/1702vW2SxHXhDt5JQZEatg0zKgqI-4WXm/edit?usp=sharing&ouid=116787546129771746745&rtpof=true&sd=true) expands on the 'Acceptance Criteria' that includes a complete project overview and examples of the application program frontend through the streamlit GUI. The 'Executive Summary' is highlighted in the PowerPoint presentation, with the complete version in the repository.
 
 ---
 --- 
@@ -123,7 +123,7 @@ Setup the environment using conda as follows:
     6. %conda activate dev  (if running the Cryvesto app go to the section on `Setup Streamlit` below')
 
 ### Setup Streamlit
-Before running the app, please make sure that Streamlit is installed on your system and the libraries mentioned above are installed as well. If Streamlit is not installed, follow these instructions:  
+Before running the app, please make sure that Streamlit is installed on your system and the libraries displayed above are installed also. If Streamlit is not installed, follow these instructions:  
 
 * pipenv install streamlit
 * pipenv shell
@@ -143,7 +143,7 @@ Follow the instructions in the User Interface below:
 #
 #### SOLIDITY SMART CONTRACT
 
-The smart contract was developed using the ERC1155 standard. The standard provided basic framework for the contract. It was enhanced with the following functionality, only some of it was used in the application. The code for the latest development is in the `ft_n_nft.sol` file in the r&d folder. This is under constant development. The code that was used for this phase of the app is in the `main` folder.
+The smart contract was developed using the `ERC1155` standard. The ERC standard provided basic framework for the contract. It was enhanced with the following functionality, only some of it was used in the application. The code for the latest development is in the `ft_n_nft.sol` file in the r&d folder. This is under constant development. The code that was used for this phase of the app is in the main folder.
 
 * Register the NFTs/TOKENS on BLOCKCHAIN 
     * registerToken()
