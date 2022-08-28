@@ -122,9 +122,9 @@ open the Terminal window and clone as follows:
 The entire application files in the current directory are as follows:
                     
                 
-![P3ReadMeTitlePic](./Images/Images/FolderDetails1.png)
+![P3ReadMeTitlePic](./Images/FolderDetails1.png)
 
-![P3ReadMeTitlePic](./Images/Images/FolderDetails2.png)
+![P3ReadMeTitlePic](./Images/FolderDetails2.png)
 
 LICENSE                         
 P3-LCA_CryVesto3.0-Proposal.md  project_notes.txt
