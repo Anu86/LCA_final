@@ -1,4 +1,3 @@
-
 # Project 3: Cryvesto 3.0- Lights_Camera_Action
 --- 
 
@@ -24,10 +23,9 @@ Currently the entertainment industry is regionally isolated in its respective te
 
 ## ACCEPTANCE CRITERIA
 The Cryvesto project meets the following criteria: 
-Functionality to provide user with registration for fungible tokens and non-fungible tokens to select choice of investible projects. Also, the need to provide royalties for non-fungible selections and transactions on sales to trade NFTs of their choice and FT cash balances into their accounts on a HD wallet.  
+Functionality to provide user with registration for fungible tokens ("BollyCoin"Tokens) and non-fungible tokens (NFTs) to select choice of investible projects. Also, the need to provide royalties for (NFT) selections, while supporting investor NFT transactions for trade and provide FT balances in their accounts on a HD wallet.    
 
-
---- 
+# 
 * [PptPresentation](https://docs.google.com/presentation/d/1702vW2SxHXhDt5JQZEatg0zKgqI-4WXm/edit?usp=sharing&ouid=116787546129771746745&rtpof=true&sd=true) 
 
 ---
